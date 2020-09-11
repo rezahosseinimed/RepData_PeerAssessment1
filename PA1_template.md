@@ -17,11 +17,41 @@ output:
   
 **1. Load the data**
 
-```{r}
+
+```r
 unzip("activity.zip")
 
 library("tidyverse")
+```
+
+```
+## ── Attaching packages ──────────────────────────────────────────── tidyverse 1.3.0 ──
+```
+
+```
+## ✓ ggplot2 3.3.2     ✓ purrr   0.3.4
+## ✓ tibble  3.0.3     ✓ dplyr   1.0.0
+## ✓ tidyr   1.1.0     ✓ stringr 1.4.0
+## ✓ readr   1.3.1     ✓ forcats 0.5.0
+```
+
+```
+## ── Conflicts ─────────────────────────────────────────────── tidyverse_conflicts() ──
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()
+```
+
+```r
 activity <- read_csv("activity.csv")
+```
+
+```
+## Parsed with column specification:
+## cols(
+##   steps = col_double(),
+##   date = col_date(format = ""),
+##   interval = col_double()
+## )
 ```
 
 \
@@ -36,10 +66,18 @@ _______________________________________________________________________________
 ### What is mean total number of steps taken per day?
 
 **1. Make a histogram of the total number of steps taken each day**
-```{r}
+
+```r
 totalSteps <- activity %>% 
                 group_by(date) %>% 
                   summarize(total = sum(steps))
+```
+
+```
+## `summarise()` ungrouping output (override with `.groups` argument)
+```
+
+```r
 ggplot(data = totalSteps, aes(x = total)) +
   geom_histogram(color = "black", fill = "skyblue") +
   ggtitle("Original activity dataest") +
@@ -55,14 +93,32 @@ ggplot(data = totalSteps, aes(x = total)) +
                      values = c("red", "purple"))
 ```
 
+```
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+```
+
+```
+## Warning: Removed 8 rows containing non-finite values (stat_bin).
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-2-1.png)<!-- -->
+
 \
   
 **2. Calculate and report the mean and median total number of steps taken per day**
 
-```{r}
+
+```r
 totalSteps %>% 
   summarize(mean = mean(total, na.rm = TRUE),
             median = median(total, na.rm = TRUE))
+```
+
+```
+## # A tibble: 1 x 2
+##     mean median
+##    <dbl>  <dbl>
+## 1 10766.  10765
 ```
 
 
@@ -74,25 +130,42 @@ _______________________________________________________________________________
 **1. Make a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) 
 and the average number of steps taken, averaged across all days (y-axis)**
 
-```{r}
+
+```r
 averageSteps <- activity %>% 
                   group_by(interval) %>% 
                     summarize(average = mean(steps, na.rm = TRUE))
+```
 
+```
+## `summarise()` ungrouping output (override with `.groups` argument)
+```
+
+```r
 ggplot(data = averageSteps, aes(x = interval, y = average)) +
   geom_line() +
   xlab("5-minute interval") +
   ylab("average number of steps taken, averaged across all days")
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-4-1.png)<!-- -->
 \
   
 **2. Which 5-minute interval, on average across all the days in the dataset, 
 contains the maximum number of steps?**
 
-```{r}
+
+```r
 averageSteps %>% 
   filter(average == max(average)) %>% 
     select(interval)
+```
+
+```
+## # A tibble: 1 x 1
+##   interval
+##      <dbl>
+## 1      835
 ```
 
 
@@ -104,8 +177,14 @@ _______________________________________________________________________________
 **1. Calculate and report the total number of missing values in the dataset (i.e. 
 the total number of rows with NAs)**
 
-```{r}
+
+```r
 sapply(activity, function(x) {sum(is.na(x))})
+```
+
+```
+##    steps     date interval 
+##     2304        0        0
 ```
 \
   
@@ -122,7 +201,8 @@ pattern?" question above (*averageSteps* tibble).
 **3. Create a new dataset that is equal to the original dataset but with the 
 missing data filled in.**
 
-```{r}
+
+```r
 activity_imputed <- activity
   
 for (i in 1:length(activity$steps)) {
@@ -140,11 +220,18 @@ and report the mean and median total number of steps taken per day. Do these val
 differ from the estimates from the first part of the assignment? What is the impact
 of imputing missing data on the estimates of the total daily number of steps?**
 
-```{r}
+
+```r
 totalSteps2 <- activity_imputed %>% 
                 group_by(date) %>% 
                   summarise(total = sum(steps))
+```
 
+```
+## `summarise()` ungrouping output (override with `.groups` argument)
+```
+
+```r
 ggplot(data = totalSteps2, aes(x = total)) +
   geom_histogram(color = "black", fill = "skyblue") +
   ggtitle("Imputed activity dataest") +
@@ -158,10 +245,25 @@ ggplot(data = totalSteps2, aes(x = total)) +
              linetype = "twodash") +
   scale_color_manual(name = "Vertical lines",
                      values = c("red", "purple"))
+```
 
+```
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
+
+```r
 totalSteps2 %>% 
   summarize(mean = mean(total),
             median = median(total))
+```
+
+```
+## # A tibble: 1 x 2
+##     mean median
+##    <dbl>  <dbl>
+## 1 10766. 10766.
 ```
 
 The *mean* remained the same as I imputed the missing values with the mean. 
@@ -176,7 +278,8 @@ _______________________________________________________________________________
 **1. Create a new factor variable in the dataset with two levels – “weekday” and 
 “weekend” indicating whether a given date is a weekday or weekend day.**
 
-```{r}
+
+```r
 activity_imputed <- activity_imputed %>% 
                       mutate(day = weekdays(date))
 
@@ -200,17 +303,26 @@ activity_imputed$day <- as.factor(activity_imputed$day)
 5-minute interval (x-axis) and the average number of steps taken, averaged across 
 all weekday days or weekend days (y-axis).**
 
-```{r}
+
+```r
 averageSteps2 <- activity_imputed %>% 
                   group_by(day, interval) %>% 
                     summarize(average = mean(steps))
+```
 
+```
+## `summarise()` regrouping output by 'day' (override with `.groups` argument)
+```
+
+```r
 ggplot(data = averageSteps2, aes(x = interval, y = average)) +
   geom_line() +
   facet_grid(rows = vars(day)) +
   xlab("5-minute interval") +
   ylab("average # of steps, averaged across all weekdays or weekends")
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
 
 \
   
