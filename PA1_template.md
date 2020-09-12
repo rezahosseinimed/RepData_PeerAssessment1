@@ -11,7 +11,7 @@ output:
 ---
 
 ## Reproducible Research: Peer Assessment 1  
-\
+
    
 ### Loading and preprocessing the data  
   
@@ -25,7 +25,7 @@ library("tidyverse")
 ```
 
 ```
-## ── Attaching packages ──────────────────────────────────────────── tidyverse 1.3.0 ──
+## ── Attaching packages ─────────────────────────────────────────── tidyverse 1.3.0 ──
 ```
 
 ```
@@ -36,7 +36,7 @@ library("tidyverse")
 ```
 
 ```
-## ── Conflicts ─────────────────────────────────────────────── tidyverse_conflicts() ──
+## ── Conflicts ────────────────────────────────────────────── tidyverse_conflicts() ──
 ## x dplyr::filter() masks stats::filter()
 ## x dplyr::lag()    masks stats::lag()
 ```
@@ -54,13 +54,13 @@ activity <- read_csv("activity.csv")
 ## )
 ```
 
-\
+
   
 **2. Process/transform the data (if necessary) into a format suitable for your 
 analysis**  
 I didn't need to transform the data.
 
-\
+
   
 _______________________________________________________________________________
 ### What is mean total number of steps taken per day?
@@ -103,7 +103,7 @@ ggplot(data = totalSteps, aes(x = total)) +
 
 ![](PA1_template_files/figure-html/unnamed-chunk-2-1.png)<!-- -->
 
-\
+
   
 **2. Calculate and report the mean and median total number of steps taken per day**
 
@@ -122,7 +122,7 @@ totalSteps %>%
 ```
 
 
-\
+
   
 _______________________________________________________________________________  
 ### What is the average daily activity pattern?
@@ -149,7 +149,7 @@ ggplot(data = averageSteps, aes(x = interval, y = average)) +
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-4-1.png)<!-- -->
-\
+
   
 **2. Which 5-minute interval, on average across all the days in the dataset, 
 contains the maximum number of steps?**
@@ -169,7 +169,7 @@ averageSteps %>%
 ```
 
 
-\
+
   
 _______________________________________________________________________________
 ### Imputing missing values
@@ -186,7 +186,7 @@ sapply(activity, function(x) {sum(is.na(x))})
 ##    steps     date interval 
 ##     2304        0        0
 ```
-\
+
   
 **2. Devise a strategy for filling in all of the missing values in the dataset. 
 The strategy does not need to be sophisticated. For example, you could use the 
@@ -196,7 +196,7 @@ I chose to impute each missing value with the mean for that 5-minute interval.
 I have previously calculated that in the "What is the average daily activity 
 pattern?" question above (*averageSteps* tibble).
 
-\
+
   
 **3. Create a new dataset that is equal to the original dataset but with the 
 missing data filled in.**
@@ -213,7 +213,7 @@ for (i in 1:length(activity$steps)) {
 }
 ```
 
-\
+
   
 **4. Make a histogram of the total number of steps taken each day and Calculate 
 and report the mean and median total number of steps taken per day. Do these values
@@ -269,8 +269,6 @@ totalSteps2 %>%
 The *mean* remained the same as I imputed the missing values with the mean. 
 However, the *median* increased just a little (previously it was 10765).
 
-
-\
   
 _______________________________________________________________________________
 ### Are there differences in activity patterns between weekdays and weekends?
@@ -297,7 +295,7 @@ for (i in 1:length(activity_imputed$day)) {
 activity_imputed$day <- as.factor(activity_imputed$day)
 ```
 
-\
+
   
 **2. Make a panel plot containing a time series plot (i.e. type = "l") of the 
 5-minute interval (x-axis) and the average number of steps taken, averaged across 
@@ -323,6 +321,6 @@ ggplot(data = averageSteps2, aes(x = interval, y = average)) +
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
-
-\
+  
+  
   
